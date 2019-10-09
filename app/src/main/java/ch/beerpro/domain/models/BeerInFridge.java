@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 
+import java.util.Date;
 import java.util.Locale;
 
 @IgnoreExtraProperties
@@ -14,17 +15,23 @@ public class BeerInFridge implements Entity {
     public static final String FIELD_USER_ID = "userId";
     public static final String FIELD_BEER_ID = "beerId";
     public static final String FIELD_AMOUNT = "amount";
+    public static final String FIELD_ADDED_AT = "addedAt";
 
     @Exclude
     private String id;
     private String userId;
     private String beerId;
     private int amount;
+    private Date addedAt;
 
-    public BeerInFridge(String userId, String beerId, int amount) {
+    public BeerInFridge(String userId, String beerId, int amount, Date addedAt) {
         this.userId = userId;
         this.beerId = beerId;
         this.amount = amount;
+        this.addedAt = addedAt;
+    }
+
+    public BeerInFridge() {
     }
 
     public static String generateId(String userId, String beerId) {
@@ -47,6 +54,8 @@ public class BeerInFridge implements Entity {
         return this.amount;
     }
 
+    public Date getAddedAt() { return this.addedAt; }
+
     public void setId(String id) {
         this.id = id;
     }
@@ -62,6 +71,8 @@ public class BeerInFridge implements Entity {
     public void setAmount(int amount) {
         this.amount = amount;
     }
+
+    public void setAddedAt(Date addedAt) { this.addedAt = addedAt; }
 
     public boolean equals(final Object o) {
         if (o == this) {
@@ -90,7 +101,11 @@ public class BeerInFridge implements Entity {
             return false;
         }
 
-        return this.getAmount() == other.getAmount();
+        if (this.getAmount() != other.getAmount()) {
+            return false;
+        }
+
+        return this.getAddedAt() == null ? other.getAddedAt() == null : this.getAddedAt().equals(other.getAddedAt());
     }
 
     private boolean canEqual(final Object other) {
@@ -105,6 +120,7 @@ public class BeerInFridge implements Entity {
         result = result * PRIME + (this.getUserId() == null ? 43 : this.getUserId().hashCode());
         result = result * PRIME + (this.getBeerId() == null ? 43 : this.getBeerId().hashCode());
         result = result * PRIME + (this.getAmount() == 0 ? 43 : this.getAmount());
+        result = result * PRIME + (this.getAddedAt() == null ? 43 : this.getAddedAt().hashCode());
 
         return result;
     }
@@ -113,11 +129,12 @@ public class BeerInFridge implements Entity {
     public String toString() {
         return String.format(
                 Locale.getDefault(),
-                "BeerInFridge(id=%s, userId=%s, beerId=%s, amount=%d",
+                "BeerInFridge(id=%s, userId=%s, beerId=%s, amount=%d, addedAt=%s",
                 this.getId(),
                 this.getUserId(),
                 this.getBeerId(),
-                this.getAmount()
+                this.getAmount(),
+                this.getAddedAt()
         );
     }
 }
