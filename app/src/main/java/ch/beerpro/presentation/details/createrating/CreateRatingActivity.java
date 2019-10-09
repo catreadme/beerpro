@@ -1,5 +1,7 @@
 package ch.beerpro.presentation.details.createrating;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -8,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -15,10 +18,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NavUtils;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.bumptech.glide.request.RequestOptions;
@@ -27,6 +32,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -62,6 +69,15 @@ public class CreateRatingActivity extends AppCompatActivity {
 
     @BindView(R.id.photoExplanation)
     TextView photoExplanation;
+
+    @BindView(R.id.addLocation)
+    Button addLocation;
+
+    @BindView(R.id.addBitterness)
+    Button addBitterness;
+
+    @BindView(R.id.addAromas)
+    Button addAromas;
 
     private CreateRatingViewModel model;
 
@@ -102,6 +118,24 @@ public class CreateRatingActivity extends AppCompatActivity {
 
         photo.setOnClickListener(view -> {
             EasyImage.openChooserWithDocuments(CreateRatingActivity.this, "", 0);
+        });
+        
+        addLocation.setOnClickListener(v -> {
+            Toast.makeText(this, "Location", Toast.LENGTH_SHORT).show();
+        });
+
+        addAromas.setOnClickListener(v -> {
+            DialogFragment aromasDialog = new AromasDialog();
+            aromasDialog.show(getSupportFragmentManager(), "aromas");
+
+            Toast.makeText(this, "Aromas", Toast.LENGTH_SHORT).show();
+        });
+
+        addBitterness.setOnClickListener(v -> {
+            DialogFragment bitternessDialog = new BitternessDialog();
+            bitternessDialog.show(getSupportFragmentManager(), "bitterness");
+
+            Toast.makeText(this, "Bitterness", Toast.LENGTH_SHORT).show();
         });
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -222,10 +256,10 @@ public class CreateRatingActivity extends AppCompatActivity {
     private void saveRating() {
         float rating = addRatingBar.getRating();
         String comment = ratingText.getText().toString();
-        // TODO show a spinner!
-        // TODO return the new rating to update the new average immediately
+        // TODO Save location here
         model.saveRating(model.getItem(), rating, comment, model.getPhoto())
                 .addOnSuccessListener(task -> onBackPressed())
                 .addOnFailureListener(error -> Log.e(TAG, "Could not save rating", error));
     }
 }
+

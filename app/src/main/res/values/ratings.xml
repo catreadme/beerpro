@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="bitterness">
+        <item>Nicht bitter</item>
+        <item>Ein wenig bitter</item>
+        <item>Bitter</item>
+        <item>Extrem bitter</item>
+    </string-array>
+
+    <string-array name="aromas">
+        <item>Fruchtig</item>
+        <item>Blumig</item>
+        <item>Würzig</item>
+    </string-array>
+</resources>
