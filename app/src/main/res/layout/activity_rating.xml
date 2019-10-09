@@ -165,14 +165,38 @@
                 app:layout_constraintTop_toBottomOf="@+id/separator5">
 
                 <Button
-                    android:id="@+id/button"
+                    android:id="@+id/addLocation"
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:drawableTop="@drawable/ic_more_horiz_black_24dp"
                     android:drawableTint="@android:color/darker_gray"
                     android:text="Ort Hinzufügen"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="10sp" />
+
+                <Button
+                    android:id="@+id/addBitterness"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:drawableTop="@drawable/ic_more_horiz_black_24dp"
+                    android:drawableTint="@android:color/darker_gray"
+                    android:text="Bitterkeit Hinzufügen"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="10sp" />
+
+                <Button
+                    android:id="@+id/addAromas"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:drawableTop="@drawable/ic_more_horiz_black_24dp"
+                    android:drawableTint="@android:color/darker_gray"
+                    android:text="Aroma Hinzufügen"
                     android:textColor="@android:color/darker_gray"
                     android:textSize="10sp" />
                 <!--
