@@ -47,7 +47,7 @@ import pl.aprilapps.easyphotopicker.EasyImage;
 import pl.tajchert.nammu.Nammu;
 import pl.tajchert.nammu.PermissionCallback;
 
-public class CreateRatingActivity extends AppCompatActivity {
+public class CreateRatingActivity extends AppCompatActivity implements BitternessDialog.BitternessDialogListener {
 
     public static final String ITEM = "item";
     public static final String RATING = "rating";
@@ -119,8 +119,11 @@ public class CreateRatingActivity extends AppCompatActivity {
         photo.setOnClickListener(view -> {
             EasyImage.openChooserWithDocuments(CreateRatingActivity.this, "", 0);
         });
-        
+
         addLocation.setOnClickListener(v -> {
+            Intent loc = new Intent(CreateRatingActivity.this, LocationDialog.class);
+            CreateRatingActivity.this.startActivity(loc);
+
             Toast.makeText(this, "Location", Toast.LENGTH_SHORT).show();
         });
 
@@ -150,6 +153,11 @@ public class CreateRatingActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBitternessSelected(int which) {
+        Toast.makeText(this, "which", Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "onBitternessSelected: " + which);
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
