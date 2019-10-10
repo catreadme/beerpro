@@ -35,7 +35,8 @@
 
         <activity
             android:name=".presentation.details.createrating.LocationDialog"
-            android:label="@string/title_activity_location_dialog">
+            android:label="@string/title_activity_location_dialog"
+            android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ch.beerpro.presentation.details.createrating.CreateRatingActivity" />

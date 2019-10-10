@@ -103,6 +103,5 @@
     <string name="title_activity_myratings">Meine Bewertungen</string>
     <string name="title_activity_mybeers">Meine Biere</string>
     <string name="action_search">Bier suchen</string>
-    <string name="action_geolocate">Ort auswählen</string>
     <string name="title_activity_location_dialog">Ort wählen</string>
 </resources>
