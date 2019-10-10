@@ -4,6 +4,7 @@
     <item
         android:id="@+id/action_geolocate"
         android:icon="@drawable/ic_geolocate"
-        android:title="@string/action_geolocate"
+        android:title="@string/title_activity_location_dialog"
         app:showAsAction="always|withText" />
+
 </menu>
