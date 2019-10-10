@@ -9,8 +9,8 @@ import java.util.Date;
 import java.util.Locale;
 
 @IgnoreExtraProperties
-public class BeerInFridge implements Entity {
-    public static final String COLLECTION = "beersInFridge";
+public class FridgeBeer implements Entity {
+    public static final String COLLECTION = "fridgeBeers";
     public static final String FIELD_ID = "id";
     public static final String FIELD_USER_ID = "userId";
     public static final String FIELD_BEER_ID = "beerId";
@@ -24,14 +24,14 @@ public class BeerInFridge implements Entity {
     private int amount;
     private Date addedAt;
 
-    public BeerInFridge(String userId, String beerId, int amount, Date addedAt) {
+    public FridgeBeer(String userId, String beerId, int amount, Date addedAt) {
         this.userId = userId;
         this.beerId = beerId;
         this.amount = amount;
         this.addedAt = addedAt;
     }
 
-    public BeerInFridge() {
+    public FridgeBeer() {
     }
 
     public static String generateId(String userId, String beerId) {
@@ -79,11 +79,11 @@ public class BeerInFridge implements Entity {
             return true;
         }
 
-        if (!(o instanceof BeerInFridge)) {
+        if (!(o instanceof FridgeBeer)) {
             return false;
         }
 
-        final BeerInFridge other = (BeerInFridge) o;
+        final FridgeBeer other = (FridgeBeer) o;
 
         if (!other.canEqual((Object) this)) {
             return false;
@@ -109,7 +109,7 @@ public class BeerInFridge implements Entity {
     }
 
     private boolean canEqual(final Object other) {
-        return other instanceof BeerInFridge;
+        return other instanceof FridgeBeer;
     }
 
     public int hashCode() {
@@ -129,7 +129,7 @@ public class BeerInFridge implements Entity {
     public String toString() {
         return String.format(
                 Locale.getDefault(),
-                "BeerInFridge(id=%s, userId=%s, beerId=%s, amount=%d, addedAt=%s",
+                "FridgeBeer(id=%s, userId=%s, beerId=%s, amount=%d, addedAt=%s",
                 this.getId(),
                 this.getUserId(),
                 this.getBeerId(),
