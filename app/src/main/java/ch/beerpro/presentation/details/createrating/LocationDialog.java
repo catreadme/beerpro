@@ -5,6 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
+import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -23,6 +26,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
@@ -56,6 +60,9 @@ public class LocationDialog extends AppCompatActivity implements OnMapReadyCallb
     private LatLng[] placeCoordinates;
     private GoogleMap googleMap;
 
+    private Marker mapMarker;
+    private String selectedPlace;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +95,14 @@ public class LocationDialog extends AppCompatActivity implements OnMapReadyCallb
             pickCurrentPlace();
             return true;
         }
+
+        if (item.getItemId() == R.id.action_done) {
+            Intent result = new Intent()
+                    .putExtra("location", this.selectedPlace);
+            setResult(Activity.RESULT_OK, result);
+            finish();
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -221,12 +236,17 @@ public class LocationDialog extends AppCompatActivity implements OnMapReadyCallb
                 markerSnippet = markerSnippet + "\n" + placeAttributions[position];
             }
 
-            googleMap.addMarker(new MarkerOptions()
+            if(mapMarker != null) {
+                mapMarker.remove();
+            }
+
+            mapMarker = googleMap.addMarker(new MarkerOptions()
                     .title(placeNames[position])
                     .position(markerLatLng)
                     .snippet(markerSnippet));
 
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(markerLatLng));
+            selectedPlace = placeNames[position];
         }
     };
 
