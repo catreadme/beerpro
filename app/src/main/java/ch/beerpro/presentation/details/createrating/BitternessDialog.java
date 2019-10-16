@@ -9,19 +9,19 @@ import androidx.fragment.app.DialogFragment;
 import ch.beerpro.R;
 
 public class BitternessDialog extends DialogFragment {
-
     public interface BitternessDialogListener {
-        void onBitternessResult(int which);
+        void onBitternessResult(String bitterness);
     }
-
-    BitternessDialogListener listener;
+    private BitternessDialogListener listener;
+    private String[] bitternessList;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        this.bitternessList = getResources().getStringArray(R.array.bitterness);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Bitterkeit")
                 .setItems(R.array.bitterness, (dialog, which) -> {
-                    listener.onBitternessResult(which);
+                    listener.onBitternessResult(this.bitternessList[which]);
                 });
 
         return builder.create();

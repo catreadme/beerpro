@@ -10,29 +10,29 @@ import java.util.ArrayList;
 import ch.beerpro.R;
 
 public class AromasDialog extends DialogFragment {
-
     public interface AromasDialogListener {
-        void onAromasResult(ArrayList<Integer> aromas);
+        void onAromasResult(ArrayList<String> aromas);
     }
-
     private AromasDialogListener listener;
+    private String[] aromasList;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        ArrayList<Integer> aromas = new ArrayList<>();
+        this.aromasList = getResources().getStringArray(R.array.aromas);
+        ArrayList<String> selectedAromas = new ArrayList<>();
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         builder.setTitle("Aromas")
                 .setMultiChoiceItems(R.array.aromas, null,
                         (dialog, which, isChecked) -> {
                             if (isChecked) {
-                                aromas.add(which);
-                            } else if (aromas.contains(which)) {
-                                aromas.remove(which);
+                                selectedAromas.add(this.aromasList[which]);
+                            } else if (selectedAromas.contains(this.aromasList[which])) {
+                                selectedAromas.remove(this.aromasList[which]);
                             }
                         })
                 .setPositiveButton("Fertig", (dialog, id) -> {
-                    this.listener.onAromasResult(aromas);
+                    this.listener.onAromasResult(selectedAromas);
                 })
                 .setNegativeButton("Abbrechen", (dialog, id) -> {
                     // Do nothing
