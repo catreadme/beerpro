@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.google.firebase.firestore.Exclude;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
@@ -23,6 +24,9 @@ public class Rating implements Entity {
     private String userPhoto;
     private String photo;
     private float rating;
+    private String location;
+    private ArrayList<String> aromas;
+    private String bitterness;
     private String comment;
 
     /**
@@ -33,7 +37,7 @@ public class Rating implements Entity {
     private Map<String, Boolean> likes;
     private Date creationDate;
 
-    public Rating(String id, String beerId, String beerName, String userId, String userName, String userPhoto, String photo, float rating, String comment, Map<String, Boolean> likes, Date creationDate) {
+    public Rating(String id, String beerId, String beerName, String userId, String userName, String userPhoto, String photo, float rating, String location, ArrayList<String> aromas, String bitterness, String comment, Map<String, Boolean> likes, Date creationDate) {
         this.id = id;
         this.beerId = beerId;
         this.beerName = beerName;
@@ -45,6 +49,9 @@ public class Rating implements Entity {
         this.comment = comment;
         this.likes = likes;
         this.creationDate = creationDate;
+        this.location = location;
+        this.aromas = aromas;
+        this.bitterness = bitterness;
     }
 
     public Rating() {
@@ -81,6 +88,12 @@ public class Rating implements Entity {
     public float getRating() {
         return this.rating;
     }
+
+    public String getLocation() { return this.location; }
+
+    public ArrayList<String> getAromas() { return this.aromas; }
+
+    public String getBitterness() { return this.bitterness; }
 
     public String getComment() {
         return this.comment;
@@ -125,6 +138,12 @@ public class Rating implements Entity {
     public void setRating(float rating) {
         this.rating = rating;
     }
+
+    public void setLocation(String location) { this.location = location; }
+
+    public void setAromas(ArrayList<String> aromas) { this.aromas = aromas; }
+
+    public void setBitterness(String bitterness) { this.bitterness = bitterness; }
 
     public void setComment(String comment) {
         this.comment = comment;
@@ -217,6 +236,6 @@ public class Rating implements Entity {
 
     @NonNull
     public String toString() {
-        return "Rating(id=" + this.getId() + ", beerId=" + this.getBeerId() + ", beerName=" + this.getBeerName() + ", userId=" + this.getUserId() + ", userName=" + this.getUserName() + ", userPhoto=" + this.getUserPhoto() + ", photo=" + this.getPhoto() + ", rating=" + this.getRating() + ", comment=" + this.getComment() + ", likes=" + this.getLikes() + ", creationDate=" + this.getCreationDate() + ")";
+        return "Rating(id=" + this.getId() + ", beerId=" + this.getBeerId() + ", beerName=" + this.getBeerName() + ", userId=" + this.getUserId() + ", userName=" + this.getUserName() + ", userPhoto=" + this.getUserPhoto() + ", photo=" + this.getPhoto() + ", rating=" + this.getRating() + ", location=" + this.getLocation() + ", aromas=" + this.getAromas() + ", bitterness=" + this.getBitterness() + ", comment=" + this.getComment() + ", likes=" + this.getLikes() + ", creationDate=" + this.getCreationDate() + ")";
     }
 }
