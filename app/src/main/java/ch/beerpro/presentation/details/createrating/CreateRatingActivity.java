@@ -48,6 +48,7 @@ public class CreateRatingActivity extends AppCompatActivity implements Bitternes
     public static final String ITEM = "item";
     public static final String RATING = "rating";
     private static final String TAG = "CreateRatingActivity";
+    private static final int LOCATION_REQUEST = 1;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
@@ -76,6 +77,9 @@ public class CreateRatingActivity extends AppCompatActivity implements Bitternes
     Button addAromas;
 
     private CreateRatingViewModel model;
+    private ArrayList<String> aromas;
+    private String bitterness;
+    private String location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,23 +122,17 @@ public class CreateRatingActivity extends AppCompatActivity implements Bitternes
 
         addLocation.setOnClickListener(v -> {
             Intent loc = new Intent(CreateRatingActivity.this, LocationDialog.class);
-            CreateRatingActivity.this.startActivity(loc);
-
-            Toast.makeText(this, "Location", Toast.LENGTH_SHORT).show();
+            CreateRatingActivity.this.startActivityForResult(loc, LOCATION_REQUEST);
         });
 
         addAromas.setOnClickListener(v -> {
             DialogFragment aromasDialog = new AromasDialog();
             aromasDialog.show(getSupportFragmentManager(), "aromas");
-
-            Toast.makeText(this, "Aromas", Toast.LENGTH_SHORT).show();
         });
 
         addBitterness.setOnClickListener(v -> {
             DialogFragment bitternessDialog = new BitternessDialog();
             bitternessDialog.show(getSupportFragmentManager(), "bitterness");
-
-            Toast.makeText(this, "Bitterness", Toast.LENGTH_SHORT).show();
         });
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -150,15 +148,13 @@ public class CreateRatingActivity extends AppCompatActivity implements Bitternes
     }
 
     @Override
-    public void onAromasResult(ArrayList<Integer> aromas) {
-        for (Integer aroma : aromas) {
-            Log.d(TAG, "onAromasResult: " + aroma);
-        }
+    public void onAromasResult(ArrayList<String> aromas) {
+        this.aromas = aromas;
     }
 
     @Override
-    public void onBitternessResult(int which) {
-        Log.d(TAG, "onBitternessResult: " + which);
+    public void onBitternessResult(String bitterness) {
+        this.bitterness = bitterness;
     }
 
     @Override
@@ -217,6 +213,10 @@ public class CreateRatingActivity extends AppCompatActivity implements Bitternes
         } else if (resultCode == UCrop.RESULT_ERROR) {
             handleCropError(data);
         }
+
+        if(requestCode == LOCATION_REQUEST && resultCode == RESULT_OK) {
+            this.location = data.getStringExtra("location");
+        }
     }
 
     private void handleCropResult(@NonNull Intent result) {
@@ -267,7 +267,7 @@ public class CreateRatingActivity extends AppCompatActivity implements Bitternes
         float rating = addRatingBar.getRating();
         String comment = ratingText.getText().toString();
         // TODO Save location here
-        model.saveRating(model.getItem(), rating, comment, model.getPhoto())
+        model.saveRating(model.getItem(), rating, this.location, this.aromas, this.bitterness, comment, model.getPhoto())
                 .addOnSuccessListener(task -> onBackPressed())
                 .addOnFailureListener(error -> Log.e(TAG, "Could not save rating", error));
     }
