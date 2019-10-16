@@ -23,7 +23,6 @@ import ch.beerpro.R;
 import ch.beerpro.domain.models.Rating;
 import ch.beerpro.presentation.utils.EntityDiffItemCallback;
 
-
 public class RatingsRecyclerViewAdapter extends ListAdapter<Rating, RatingsRecyclerViewAdapter.ViewHolder> {
 
     private static final EntityDiffItemCallback<Rating> DIFF_CALLBACK = new EntityDiffItemCallback<>();
@@ -61,6 +60,15 @@ public class RatingsRecyclerViewAdapter extends ListAdapter<Rating, RatingsRecyc
         @BindView(R.id.ratingBar)
         RatingBar ratingBar;
 
+        @BindView(R.id.aromas)
+        TextView aromas;
+
+        @BindView(R.id.bitterness)
+        TextView bitterness;
+
+        @BindView(R.id.location)
+        TextView location;
+
         @BindView(R.id.authorName)
         TextView authorName;
 
@@ -86,6 +94,11 @@ public class RatingsRecyclerViewAdapter extends ListAdapter<Rating, RatingsRecyc
 
             ratingBar.setNumStars(5);
             ratingBar.setRating(item.getRating());
+
+            location.setText("Location: " + item.getLocation());
+            bitterness.setText("Bitterkeit: " + item.getBitterness());
+            aromas.setText("Aromas: " + item.getAromas());
+
             String formattedDate =
                     DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.SHORT).format(item.getCreationDate());
             date.setText(formattedDate);
