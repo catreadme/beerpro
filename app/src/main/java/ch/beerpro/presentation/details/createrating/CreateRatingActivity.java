@@ -1,7 +1,5 @@
 package ch.beerpro.presentation.details.createrating;
 
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -18,7 +16,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NavUtils;
@@ -32,7 +29,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -47,7 +43,7 @@ import pl.aprilapps.easyphotopicker.EasyImage;
 import pl.tajchert.nammu.Nammu;
 import pl.tajchert.nammu.PermissionCallback;
 
-public class CreateRatingActivity extends AppCompatActivity implements BitternessDialog.BitternessDialogListener {
+public class CreateRatingActivity extends AppCompatActivity implements BitternessDialog.BitternessDialogListener, AromasDialog.AromasDialogListener {
 
     public static final String ITEM = "item";
     public static final String RATING = "rating";
@@ -154,9 +150,15 @@ public class CreateRatingActivity extends AppCompatActivity implements Bitternes
     }
 
     @Override
-    public void onBitternessSelected(int which) {
-        Toast.makeText(this, "which", Toast.LENGTH_SHORT).show();
-        Log.d(TAG, "onBitternessSelected: " + which);
+    public void onAromasResult(ArrayList<Integer> aromas) {
+        for (Integer aroma : aromas) {
+            Log.d(TAG, "onAromasResult: " + aroma);
+        }
+    }
+
+    @Override
+    public void onBitternessResult(int which) {
+        Log.d(TAG, "onBitternessResult: " + which);
     }
 
     @Override
