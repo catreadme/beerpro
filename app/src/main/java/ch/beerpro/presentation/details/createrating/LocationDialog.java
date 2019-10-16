@@ -39,7 +39,7 @@ public class LocationDialog extends AppCompatActivity implements OnMapReadyCallb
 
     private static final String TAG = "LocationDialog";
 
-    ListView places;
+    private ListView places;
     private PlacesClient placesClient;
     private FusedLocationProviderClient fusedLocProvClient;
     private Location lastKnownLoc;
@@ -154,7 +154,7 @@ public class LocationDialog extends AppCompatActivity implements OnMapReadyCallb
 
                             String currLatLng = (placeCoordinates[i] == null) ? "" : placeCoordinates[i].toString();
 
-                            Log.i(TAG, String.format("Place " + place.getName() + " has likelihood: " + likelihood.getLikelihood() + " at " + currLatLng));
+                            Log.i(TAG, "Place " + place.getName() + " has likelihood: " + likelihood.getLikelihood() + " at " + currLatLng);
 
                             i++;
                             if (i > (placesCount - 1)) {
