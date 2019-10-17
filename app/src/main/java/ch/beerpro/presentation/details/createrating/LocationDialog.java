@@ -246,7 +246,7 @@ public class LocationDialog extends AppCompatActivity implements OnMapReadyCallb
                     .snippet(markerSnippet));
 
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(markerLatLng));
-            selectedPlace = placeNames[position];
+            selectedPlace = placeNames[position] + ", " + placeAddresses[position];
         }
     };
 
