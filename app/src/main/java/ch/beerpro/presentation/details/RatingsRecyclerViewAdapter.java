@@ -1,5 +1,6 @@
 package ch.beerpro.presentation.details;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -95,9 +96,27 @@ public class RatingsRecyclerViewAdapter extends ListAdapter<Rating, RatingsRecyc
             ratingBar.setNumStars(5);
             ratingBar.setRating(item.getRating());
 
-            location.setText("Location: " + item.getLocation());
-            bitterness.setText("Bitterkeit: " + item.getBitterness());
-            aromas.setText("Aromas: " + item.getAromas());
+            if(item.getLocation() != null) {
+                String locationText = "Ort: " + item.getLocation();
+                location.setText(locationText);
+            } else {
+                location.setVisibility(View.GONE);
+            }
+
+            if(item.getBitterness() != null) {
+                String bitternessText = "Bitterkeit: " + item.getBitterness();
+                bitterness.setText(bitternessText);
+            } else {
+                bitterness.setVisibility(View.GONE);
+            }
+
+            if(item.getAromas() != null) {
+                String text = TextUtils.join(", ", item.getAromas());
+                String aromasText = "Aromen: " + text;
+                aromas.setText(aromasText);
+            } else {
+                aromas.setVisibility(View.GONE);
+            }
 
             String formattedDate =
                     DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.SHORT).format(item.getCreationDate());
