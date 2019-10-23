@@ -1,11 +1,12 @@
 *.iml
 .gradle
 /local.properties
-/.idea/caches/build_file_checksums.ser
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
 .DS_Store
 /build
 /captures
 .externalNativeBuild
+.idea
+.firebaserc
+app/google-services.json
+app/src/debug/res/values/google_maps_api.xml
+app/src/release/res/values/google_maps_api.xml
