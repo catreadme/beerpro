@@ -11,13 +11,14 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -35,8 +36,10 @@ import com.google.android.libraries.places.api.model.PlaceLikelihood;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
+
 import java.util.Arrays;
 import java.util.List;
+
 import ch.beerpro.R;
 
 public class LocationDialog extends AppCompatActivity implements OnMapReadyCallback {
@@ -48,7 +51,7 @@ public class LocationDialog extends AppCompatActivity implements OnMapReadyCallb
     private FusedLocationProviderClient fusedLocProvClient;
     private Location lastKnownLoc;
 
-    private final LatLng hsr = new LatLng(47.2233607,8.815174);
+    private final LatLng hsr = new LatLng(47.2233607, 8.815174);
     private static final int DEFAULT_ZOOM = 17;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private boolean locPermissionGranted;
@@ -75,12 +78,12 @@ public class LocationDialog extends AppCompatActivity implements OnMapReadyCallb
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        places = findViewById(R.id.listPlaces);
+        this.places = findViewById(R.id.listPlaces);
 
         String apiKey = getString(R.string.google_maps_key);
         Places.initialize(getApplicationContext(), apiKey);
-        placesClient = Places.createClient(this);
-        fusedLocProvClient = LocationServices.getFusedLocationProviderClient(this);
+        this.placesClient = Places.createClient(this);
+        this.fusedLocProvClient = LocationServices.getFusedLocationProviderClient(this);
     }
 
     @Override
@@ -92,99 +95,45 @@ public class LocationDialog extends AppCompatActivity implements OnMapReadyCallb
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_geolocate) {
-            pickCurrentPlace();
+            this.pickCurrentPlace();
             return true;
         }
 
         if (item.getItemId() == R.id.action_done) {
-            Intent result = new Intent()
-                    .putExtra("location", this.selectedPlace);
-            setResult(Activity.RESULT_OK, result);
-            finish();
+            Intent result = new Intent();
+            result.putExtra("location", this.selectedPlace);
+
+            this.setResult(Activity.RESULT_OK, result);
+            this.finish();
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    private void pickCurrentPlace() {
+        if (this.googleMap == null) {
+            return;
+        }
+
+        if (this.locPermissionGranted) {
+            this.getDeviceLocation();
+        } else {
+            Log.i(TAG, "The user did not grant location permission.");
+            this.googleMap.addMarker(new MarkerOptions()
+                    .title("Default Location")
+                    .position(hsr)
+                    .snippet("No places found, because location permission is disabled."));
+            this.getLocationPermission();
+        }
+    }
+
     private void getLocationPermission() {
-        locPermissionGranted = false;
+        this.locPermissionGranted = false;
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locPermissionGranted = true;
+            this.locPermissionGranted = true;
         } else {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        locPermissionGranted = false;
-        if (requestCode == PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                locPermissionGranted = true;
-            }
-        }
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        this.googleMap = googleMap;
-        
-        LatLng hsr = new LatLng(47.2233607,8.815174);
-        this.googleMap.addMarker(new MarkerOptions().position(hsr).title("HSR"));
-        this.googleMap.moveCamera(CameraUpdateFactory.newLatLng(hsr));
-
-        this.googleMap.getUiSettings().setZoomControlsEnabled(true);
-        getLocationPermission();
-    }
-
-    private void getCurrentPlaceLikelihoods() {
-        List<Place.Field> placeFields = Arrays.asList(Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG);
-
-        final FindCurrentPlaceRequest req = FindCurrentPlaceRequest.builder(placeFields).build();
-        Task<FindCurrentPlaceResponse> res = placesClient.findCurrentPlace(req);
-        res.addOnCompleteListener(this,
-                task -> {
-                    if (task.isSuccessful()) {
-                        FindCurrentPlaceResponse response = task.getResult();
-                        int placesCount;
-                        if (response.getPlaceLikelihoods().size() < MAX_LIST_ENTRIES) {
-                            placesCount = response.getPlaceLikelihoods().size();
-                        } else {
-                            placesCount = MAX_LIST_ENTRIES;
-                        }
-
-                        int i = 0;
-                        placeNames = new String[placesCount];
-                        placeAddresses = new String[placesCount];
-                        placeAttributions = new String[placesCount];
-                        placeCoordinates = new LatLng[placesCount];
-
-                        for (PlaceLikelihood likelihood : response.getPlaceLikelihoods()) {
-                            Place place = likelihood.getPlace();
-
-                            placeNames[i] = place.getName();
-                            placeAddresses[i] = place.getAddress();
-                            placeAttributions[i] = (place.getAttributions() == null) ? null : String.join(" ", place.getAttributions());
-                            placeCoordinates[i] = place.getLatLng();
-
-                            String currLatLng = (placeCoordinates[i] == null) ? "" : placeCoordinates[i].toString();
-
-                            Log.i(TAG, "Place " + place.getName() + " has likelihood: " + likelihood.getLikelihood() + " at " + currLatLng);
-
-                            i++;
-                            if (i > (placesCount - 1)) {
-                                break;
-                            }
-                        }
-                        fillPlacesList();
-                    } else {
-                        Exception exception = task.getException();
-                        if (exception instanceof ApiException) {
-                            ApiException apiException = (ApiException) exception;
-                            Log.e(TAG, "Place not found: " + apiException.getStatusCode());
-                        }
-                    }
-                });
     }
 
     private void getDeviceLocation() {
@@ -193,66 +142,118 @@ public class LocationDialog extends AppCompatActivity implements OnMapReadyCallb
                 Task<Location> locationResult = fusedLocProvClient.getLastLocation();
                 locationResult.addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
-                        lastKnownLoc = task.getResult();
-                        Log.d(TAG, "Latitude: " + lastKnownLoc.getLatitude());
-                        Log.d(TAG, "Longitude: " + lastKnownLoc.getLongitude());
+                        this.lastKnownLoc = task.getResult();
+                        Log.d(TAG, "Latitude: " + this.lastKnownLoc.getLatitude());
+                        Log.d(TAG, "Longitude: " + this.lastKnownLoc.getLongitude());
 
-                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lastKnownLoc.getLatitude(), lastKnownLoc.getLongitude()), DEFAULT_ZOOM));
+                        this.googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lastKnownLoc.getLatitude(), lastKnownLoc.getLongitude()), DEFAULT_ZOOM));
                     } else {
                         Log.d(TAG, "Current location is null. Using defaults.");
                         Log.e(TAG, "Exception: %s", task.getException());
-                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(hsr, DEFAULT_ZOOM));
+                        this.googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(this.hsr, DEFAULT_ZOOM));
                     }
-                    getCurrentPlaceLikelihoods();
+                    this.getCurrentPlaceLikelihoods();
                 });
             }
-        } catch (SecurityException e)  {
+        } catch (SecurityException e) {
             Log.e("Exception: %s", e.getMessage());
         }
     }
 
-    private void pickCurrentPlace() {
-        if (googleMap == null) {
-            return;
+    private void getCurrentPlaceLikelihoods() {
+        List<Place.Field> placeFields = Arrays.asList(Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG);
+
+        FindCurrentPlaceRequest req = FindCurrentPlaceRequest.builder(placeFields).build();
+        Task<FindCurrentPlaceResponse> res = placesClient.findCurrentPlace(req);
+        res.addOnCompleteListener(this, task -> {
+            if (task.isSuccessful()) {
+                FindCurrentPlaceResponse response = task.getResult();
+                int placesCount;
+                if (response.getPlaceLikelihoods().size() < MAX_LIST_ENTRIES) {
+                    placesCount = response.getPlaceLikelihoods().size();
+                } else {
+                    placesCount = MAX_LIST_ENTRIES;
+                }
+
+                int i = 0;
+                this.placeNames = new String[placesCount];
+                this.placeAddresses = new String[placesCount];
+                this.placeAttributions = new String[placesCount];
+                this.placeCoordinates = new LatLng[placesCount];
+
+                for (PlaceLikelihood likelihood : response.getPlaceLikelihoods()) {
+                    Place place = likelihood.getPlace();
+
+                    this.placeNames[i] = place.getName();
+                    this.placeAddresses[i] = place.getAddress();
+                    this.placeAttributions[i] = (place.getAttributions() == null) ? null : TextUtils.join(" ", place.getAttributions());
+                    this.placeCoordinates[i] = place.getLatLng();
+
+                    String currLatLng = (placeCoordinates[i] == null) ? "" : placeCoordinates[i].toString();
+                    Log.i(TAG, "Place " + place.getName() + " has likelihood: " + likelihood.getLikelihood() + " at " + currLatLng);
+
+                    i++;
+                    if (i > (placesCount - 1)) {
+                        break;
+                    }
+                }
+                this.fillPlacesList();
+            } else {
+                Exception exception = task.getException();
+                if (exception instanceof ApiException) {
+                    ApiException apiException = (ApiException) exception;
+                    Log.e(TAG, "Place not found: " + apiException.getStatusCode());
+                }
+            }
+        });
+    }
+
+    private void fillPlacesList() {
+        ArrayAdapter<String> placesAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, this.placeNames);
+        this.places.setAdapter(placesAdapter);
+        this.places.setOnItemClickListener(listClickedHandler);
+    }
+
+    private AdapterView.OnItemClickListener listClickedHandler = (parent, v, position, id) -> {
+        LatLng markerLatLng = this.placeCoordinates[position];
+        String markerSnippet = this.placeAddresses[position];
+
+        if (this.placeAttributions[position] != null) {
+            markerSnippet = markerSnippet + "\n" + this.placeAttributions[position];
         }
 
-        if (locPermissionGranted) {
-            getDeviceLocation();
-        } else {
-            Log.i(TAG, "The user did not grant location permission.");
-            googleMap.addMarker(new MarkerOptions()
-                    .title("Default Location")
-                    .position(hsr)
-                    .snippet("No places found, because location permission is disabled."));
-            getLocationPermission();
+        if (this.mapMarker != null) {
+            this.mapMarker.remove();
+        }
+
+        this.mapMarker = this.googleMap.addMarker(new MarkerOptions()
+                .title(this.placeNames[position])
+                .position(markerLatLng)
+                .snippet(markerSnippet));
+
+        this.googleMap.moveCamera(CameraUpdateFactory.newLatLng(markerLatLng));
+        this.selectedPlace = this.placeNames[position] + ", " + placeAddresses[position];
+    };
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        this.locPermissionGranted = false;
+        if (requestCode == PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                this.locPermissionGranted = true;
+            }
         }
     }
 
-    private AdapterView.OnItemClickListener listClickedHandler = new AdapterView.OnItemClickListener() {
-        public void onItemClick(AdapterView parent, View v, int position, long id) {
-            LatLng markerLatLng = placeCoordinates[position];
-            String markerSnippet = placeAddresses[position];
-            if (placeAttributions[position] != null) {
-                markerSnippet = markerSnippet + "\n" + placeAttributions[position];
-            }
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        this.googleMap = googleMap;
 
-            if(mapMarker != null) {
-                mapMarker.remove();
-            }
+        LatLng hsr = new LatLng(47.2233607, 8.815174);
+        this.googleMap.addMarker(new MarkerOptions().position(hsr).title("HSR"));
+        this.googleMap.moveCamera(CameraUpdateFactory.newLatLng(hsr));
 
-            mapMarker = googleMap.addMarker(new MarkerOptions()
-                    .title(placeNames[position])
-                    .position(markerLatLng)
-                    .snippet(markerSnippet));
-
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(markerLatLng));
-            selectedPlace = placeNames[position] + ", " + placeAddresses[position];
-        }
-    };
-
-    private void fillPlacesList() {
-        ArrayAdapter<String> placesAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, placeNames);
-        places.setAdapter(placesAdapter);
-        places.setOnItemClickListener(listClickedHandler);
+        this.googleMap.getUiSettings().setZoomControlsEnabled(true);
+        this.getLocationPermission();
     }
 }
