@@ -266,7 +266,6 @@ public class CreateRatingActivity extends AppCompatActivity implements Bitternes
     private void saveRating() {
         float rating = addRatingBar.getRating();
         String comment = ratingText.getText().toString();
-        // TODO Save location here
         model.saveRating(model.getItem(), rating, this.location, this.aromas, this.bitterness, comment, model.getPhoto())
                 .addOnSuccessListener(task -> onBackPressed())
                 .addOnFailureListener(error -> Log.e(TAG, "Could not save rating", error));

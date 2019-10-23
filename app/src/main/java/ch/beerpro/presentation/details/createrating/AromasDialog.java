@@ -21,7 +21,6 @@ public class AromasDialog extends DialogFragment {
         this.aromasList = getResources().getStringArray(R.array.aromas);
         ArrayList<String> selectedAromas = new ArrayList<>();
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
         builder.setTitle("Aromas")
                 .setMultiChoiceItems(R.array.aromas, null,
                         (dialog, which, isChecked) -> {
