@@ -24,7 +24,6 @@ import ch.beerpro.domain.models.Wish;
 import ch.beerpro.presentation.details.DetailsActivity;
 import ch.beerpro.presentation.profile.mywishlist.OnWishlistItemInteractionListener;
 import ch.beerpro.presentation.profile.mywishlist.WishlistRecyclerViewAdapter;
-import ch.beerpro.presentation.profile.mywishlist.WishlistViewModel;
 
 public class FridgeActivity extends AppCompatActivity implements OnWishlistItemInteractionListener {
 
@@ -37,7 +36,7 @@ public class FridgeActivity extends AppCompatActivity implements OnWishlistItemI
     @BindView(R.id.emptyView)
     View emptyView;
 
-    private WishlistViewModel model;
+    private FridgeViewModel model;
     private WishlistRecyclerViewAdapter adapter;
 
     @Override
@@ -50,8 +49,8 @@ public class FridgeActivity extends AppCompatActivity implements OnWishlistItemI
         getSupportActionBar().setTitle(getString(R.string.title_activity_fridge));
 
 
-        model = ViewModelProviders.of(this).get(WishlistViewModel.class);
-        model.getMyWishlistWithBeers().observe(this, this::updateWishlist);
+        model = ViewModelProviders.of(this).get(FridgeViewModel.class);
+        model.getMyFridgeWithBeers().observe(this, this::updateWishlist);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -95,6 +94,6 @@ public class FridgeActivity extends AppCompatActivity implements OnWishlistItemI
 
     @Override
     public void onWishClickedListener(Beer beer) {
-        model.toggleItemInWishlist(beer.getId());
+        model.toggleItemInFridge(beer.getId());
     }
 }
