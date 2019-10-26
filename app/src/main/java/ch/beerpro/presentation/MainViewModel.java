@@ -12,6 +12,7 @@ import java.util.List;
 
 import ch.beerpro.data.repositories.BeersRepository;
 import ch.beerpro.data.repositories.CurrentUser;
+import ch.beerpro.data.repositories.FridgeRepository;
 import ch.beerpro.data.repositories.LikesRepository;
 import ch.beerpro.data.repositories.MyBeersRepository;
 import ch.beerpro.data.repositories.RatingsRepository;
@@ -32,8 +33,10 @@ public class MainViewModel extends ViewModel implements CurrentUser {
     private final LikesRepository likesRepository;
     private final RatingsRepository ratingsRepository;
     private final WishlistRepository wishlistRepository;
+    private final FridgeRepository fridgeRepository;
 
     private final LiveData<List<Wish>> myWishlist;
+    private final LiveData<List<Wish>> myFridge;
     private final LiveData<List<Rating>> myRatings;
     private final LiveData<List<MyBeer>> myBeers;
 
@@ -44,6 +47,7 @@ public class MainViewModel extends ViewModel implements CurrentUser {
         beersRepository = new BeersRepository();
         likesRepository = new LikesRepository();
         wishlistRepository = new WishlistRepository();
+        fridgeRepository = new FridgeRepository();
         ratingsRepository = new RatingsRepository();
         MyBeersRepository myBeersRepository = new MyBeersRepository();
 
@@ -51,6 +55,7 @@ public class MainViewModel extends ViewModel implements CurrentUser {
 
         MutableLiveData<String> currentUserId = new MutableLiveData<>();
         myWishlist = wishlistRepository.getMyWishlist(currentUserId);
+        myFridge = fridgeRepository.getMyFridge(currentUserId);
         myRatings = ratingsRepository.getMyRatings(currentUserId);
         myBeers = myBeersRepository.getMyBeers(allBeers, myWishlist, myRatings);
 
@@ -75,6 +80,8 @@ public class MainViewModel extends ViewModel implements CurrentUser {
     public LiveData<List<Wish>> getMyWishlist() {
         return myWishlist;
     }
+
+    public LiveData<List<Wish>> getMyFridge() { return myFridge; }
 
     public LiveData<List<String>> getBeerCategories() {
         return beersRepository.getBeerCategories();

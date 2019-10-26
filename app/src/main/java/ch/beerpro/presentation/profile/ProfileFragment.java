@@ -72,7 +72,7 @@ public class ProfileFragment extends Fragment {
 
         model = ViewModelProviders.of(this).get(MainViewModel.class);
         model.getMyWishlist().observe(this, this::updateWishlistCount);
-        model.getMyWishlist().observe(this, this::updateFridgeCount);
+        model.getMyFridge().observe(this, this::updateFridgeCount);
         model.getMyRatings().observe(this, this::updateRatingsCount);
         model.getMyBeers().observe(this, this::updateMyBeersCount);
 
