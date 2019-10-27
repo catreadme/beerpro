@@ -74,6 +74,9 @@ public class FridgeRecyclerViewAdapter extends ListAdapter<Pair<FridgeItem, Beer
         @BindView(R.id.numRatings)
         TextView numRatings;
 
+        @BindView(R.id.amount)
+        TextView amount;
+
         @BindView(R.id.addedAt)
         TextView addedAt;
 
@@ -96,7 +99,7 @@ public class FridgeRecyclerViewAdapter extends ListAdapter<Pair<FridgeItem, Beer
             ratingBar.setRating(item.getAvgRating());
             numRatings.setText(itemView.getResources().getString(R.string.fmt_num_ratings, item.getNumRatings()));
             itemView.setOnClickListener(v -> listener.onMoreClickedListener(photo, item));
-
+            amount.setText(fridgeItem.getAmount().toString());
             String formattedDate =
                     DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.SHORT).format(fridgeItem.getAddedAt());
             addedAt.setText(formattedDate);

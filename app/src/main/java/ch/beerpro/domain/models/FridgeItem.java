@@ -14,6 +14,7 @@ public class FridgeItem implements Entity {
     public static final String FIELD_ID = "id";
     public static final String FIELD_USER_ID = "userId";
     public static final String FIELD_BEER_ID = "beerId";
+    public static final String FIELD_AMOUNT = "amount";
     public static final String FIELD_ADDED_AT = "addedAt";
 
     /**
@@ -23,11 +24,13 @@ public class FridgeItem implements Entity {
     private String id;
     private String userId;
     private String beerId;
+    private Integer amount;
     private Date addedAt;
 
     public FridgeItem(String userId, String beerId, Date addedAt) {
         this.userId = userId;
         this.beerId = beerId;
+        this.amount = amount;
         this.addedAt = addedAt;
     }
 
@@ -50,6 +53,8 @@ public class FridgeItem implements Entity {
         return this.beerId;
     }
 
+    public Integer getAmount() { return this.amount; }
+
     public Date getAddedAt() {
         return this.addedAt;
     }
@@ -65,6 +70,8 @@ public class FridgeItem implements Entity {
     public void setBeerId(String beerId) {
         this.beerId = beerId;
     }
+
+    public void setAmount(Integer amount) { this.amount = amount; }
 
     public void setAddedAt(Date addedAt) {
         this.addedAt = addedAt;
@@ -86,6 +93,10 @@ public class FridgeItem implements Entity {
         final Object other$beerId = other.getBeerId();
         if (this$beerId == null ? other$beerId != null : !this$beerId.equals(other$beerId))
             return false;
+        final Object this$amount = this.getAmount();
+        final Object other$amount = other.getAmount();
+        if (this$beerId == null ? other$beerId != null : !this$beerId.equals(other$beerId))
+            return false;
         final Object this$addedAt = this.getAddedAt();
         final Object other$addedAt = other.getAddedAt();
         return this$addedAt == null ? other$addedAt == null : this$addedAt.equals(other$addedAt);
@@ -104,6 +115,8 @@ public class FridgeItem implements Entity {
         result = result * PRIME + ($userId == null ? 43 : $userId.hashCode());
         final Object $beerId = this.getBeerId();
         result = result * PRIME + ($beerId == null ? 43 : $beerId.hashCode());
+        final Object $amount = this.getAmount();
+        result = result * PRIME + ($amount == null ? 43 : $amount.hashCode());
         final Object $addedAt = this.getAddedAt();
         result = result * PRIME + ($addedAt == null ? 43 : $addedAt.hashCode());
         return result;
@@ -111,6 +124,6 @@ public class FridgeItem implements Entity {
 
     @NonNull
     public String toString() {
-        return "FridgeItem(id=" + this.getId() + ", userId=" + this.getUserId() + ", beerId=" + this.getBeerId() + ", addedAt=" + this.getAddedAt() + ")";
+        return "FridgeItem(id=" + this.getId() + ", userId=" + this.getUserId() + ", beerId=" + this.getBeerId() + ",amount=" + this.getAmount() + ", addedAt=" + this.getAddedAt() + ")";
     }
 }
