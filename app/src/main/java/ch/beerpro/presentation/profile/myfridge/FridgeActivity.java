@@ -20,12 +20,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ch.beerpro.R;
 import ch.beerpro.domain.models.Beer;
-import ch.beerpro.domain.models.Wish;
+import ch.beerpro.domain.models.FridgeItem;
 import ch.beerpro.presentation.details.DetailsActivity;
-import ch.beerpro.presentation.profile.mywishlist.OnWishlistItemInteractionListener;
-import ch.beerpro.presentation.profile.mywishlist.WishlistRecyclerViewAdapter;
 
-public class FridgeActivity extends AppCompatActivity implements OnWishlistItemInteractionListener {
+public class FridgeActivity extends AppCompatActivity implements OnFridgeItemInteractionListener {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -37,7 +35,7 @@ public class FridgeActivity extends AppCompatActivity implements OnWishlistItemI
     View emptyView;
 
     private FridgeViewModel model;
-    private WishlistRecyclerViewAdapter adapter;
+    private FridgeRecyclerViewAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,18 +48,18 @@ public class FridgeActivity extends AppCompatActivity implements OnWishlistItemI
 
 
         model = ViewModelProviders.of(this).get(FridgeViewModel.class);
-        model.getMyFridgeWithBeers().observe(this, this::updateWishlist);
+        model.getMyFridgeWithBeers().observe(this, this::updateFridge);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new WishlistRecyclerViewAdapter(this);
+        adapter = new FridgeRecyclerViewAdapter(this);
 
         recyclerView.setAdapter(adapter);
 
     }
 
-    private void updateWishlist(List<Pair<Wish, Beer>> entries) {
+    private void updateFridge(List<Pair<FridgeItem, Beer>> entries) {
         adapter.submitList(entries);
         if (entries.isEmpty()) {
             emptyView.setVisibility(View.VISIBLE);
@@ -93,7 +91,7 @@ public class FridgeActivity extends AppCompatActivity implements OnWishlistItemI
     }
 
     @Override
-    public void onWishClickedListener(Beer beer) {
+    public void onFridgeItemClickedListener(Beer beer) {
         model.toggleItemInFridge(beer.getId());
     }
 }
