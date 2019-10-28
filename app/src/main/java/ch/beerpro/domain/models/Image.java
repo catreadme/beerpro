@@ -12,7 +12,7 @@ public class Image implements Entity {
 
     public static final String COLLECTION = "images";
     public static final String FIELD_ID = "id";
-    public static final String FIELD_USER_ID = "resourceName";
+    public static final String FIELD_RESOURCE_NAME = "resourceName";
 
     private String id;
     private String resourceName;

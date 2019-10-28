@@ -3,7 +3,9 @@ package ch.beerpro.presentation.details;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -31,6 +33,7 @@ import butterknife.OnClick;
 import ch.beerpro.GlideApp;
 import ch.beerpro.R;
 import ch.beerpro.domain.models.Beer;
+import ch.beerpro.domain.models.Image;
 import ch.beerpro.domain.models.Rating;
 import ch.beerpro.domain.models.Wish;
 import ch.beerpro.presentation.details.createrating.CreateRatingActivity;
@@ -76,6 +79,9 @@ public class DetailsActivity extends AppCompatActivity implements OnRatingLikedL
 
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
+
+    @BindView(R.id.backgroundImage)
+    ImageView backgroundImageView;
 
     private RatingsRecyclerViewAdapter adapter;
 
@@ -140,6 +146,17 @@ public class DetailsActivity extends AppCompatActivity implements OnRatingLikedL
         avgRating.setText(getResources().getString(R.string.fmt_avg_rating, item.getAvgRating()));
         numRatings.setText(getResources().getString(R.string.fmt_ratings, item.getNumRatings()));
         toolbar.setTitle(item.getName());
+        model.getImageById(item.getManufacturer()).observe(this, this::updateImage);
+    }
+
+    private void updateImage(Image image) {
+        String backgroundImageURI = "@drawable/" + image.getResourceName();
+        int backgroundImageIdentifier = getResources().getIdentifier(backgroundImageURI, null, getPackageName());
+
+        if (backgroundImageIdentifier != 0) {
+            Drawable backGroundImageResource = getResources().getDrawable(backgroundImageIdentifier);
+            backgroundImageView.setImageDrawable(backGroundImageResource);
+        }
     }
 
     private void updateRatings(List<Rating> ratings) {
