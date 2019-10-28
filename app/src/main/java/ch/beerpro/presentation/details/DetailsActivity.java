@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.request.RequestOptions;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -122,10 +122,14 @@ public class DetailsActivity extends AppCompatActivity implements OnRatingLikedL
 
     @OnClick(R.id.actionsButton)
     public void showBottomSheetDialog() {
-        View view = getLayoutInflater().inflate(R.layout.single_bottom_sheet_dialog, null);
-        BottomSheetDialog dialog = new BottomSheetDialog(this);
-        dialog.setContentView(view);
-        dialog.show();
+        BottomSheetDialogFragment actionsBottomSheetDialog = new ActionsBottomSheetDialog();
+
+        Bundle arguments = new Bundle();
+        arguments.putString("userId", model.getCurrentUser().getUid());
+        arguments.putString("beerId", getIntent().getExtras().getString(ITEM_ID));
+        actionsBottomSheetDialog.setArguments(arguments);
+
+        actionsBottomSheetDialog.show(getSupportFragmentManager(), "ActionsBottomSheetDialog");
     }
 
     private void updateBeer(Beer item) {
