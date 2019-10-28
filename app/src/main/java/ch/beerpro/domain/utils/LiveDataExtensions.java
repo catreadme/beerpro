@@ -7,6 +7,8 @@ import androidx.lifecycle.MediatorLiveData;
 
 import org.apache.commons.lang3.tuple.Triple;
 
+import java.util.List;
+
 public class LiveDataExtensions {
 
     public static <A, B> LiveData<Pair<A, B>> zip(LiveData<A> as, LiveData<B> bs) {
