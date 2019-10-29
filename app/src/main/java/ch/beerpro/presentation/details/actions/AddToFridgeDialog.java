@@ -15,6 +15,7 @@ import ch.beerpro.data.repositories.FridgeRepository;
 
 public class AddToFridgeDialog extends DialogFragment {
     String userId, beerId;
+    int amountInFridge;
     FridgeRepository fridgeRepository;
 
     @Override
@@ -23,6 +24,7 @@ public class AddToFridgeDialog extends DialogFragment {
         Bundle arguments = getArguments();
         userId = arguments.getString("userId");
         beerId = arguments.getString("beerId");
+        amountInFridge = arguments.getInt("amountInFridge");
         fridgeRepository = new FridgeRepository();
     }
 
@@ -33,7 +35,7 @@ public class AddToFridgeDialog extends DialogFragment {
         NumberPicker numberPicker = view.findViewById(R.id.addToFridgeNumber);
         numberPicker.setMinValue(1);
         numberPicker.setMaxValue(99);
-        numberPicker.setValue(1);
+        numberPicker.setValue(amountInFridge);
 
         Button submitButton = view.findViewById(R.id.addToFridgeSubmit);
         submitButton.setOnClickListener(new View.OnClickListener() {

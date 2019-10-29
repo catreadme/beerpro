@@ -31,6 +31,7 @@ import butterknife.OnClick;
 import ch.beerpro.GlideApp;
 import ch.beerpro.R;
 import ch.beerpro.domain.models.Beer;
+import ch.beerpro.domain.models.FridgeItem;
 import ch.beerpro.domain.models.Rating;
 import ch.beerpro.domain.models.Wish;
 import ch.beerpro.presentation.details.createrating.CreateRatingActivity;
@@ -41,6 +42,9 @@ public class DetailsActivity extends AppCompatActivity implements OnRatingLikedL
 
     public static final String ITEM_ID = "item_id";
     private static final String TAG = "DetailsActivity";
+
+    private int amountInFridge = 1;
+
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
@@ -107,6 +111,7 @@ public class DetailsActivity extends AppCompatActivity implements OnRatingLikedL
         model.getBeer().observe(this, this::updateBeer);
         model.getRatings().observe(this, this::updateRatings);
         model.getWish().observe(this, this::toggleWishlistView);
+        model.getFridgeItem().observe(this, this::updateFridgeItem);
 
         recyclerView.setAdapter(adapter);
         addRatingBar.setOnRatingBarChangeListener(this::addNewRating);
@@ -127,6 +132,7 @@ public class DetailsActivity extends AppCompatActivity implements OnRatingLikedL
         Bundle arguments = new Bundle();
         arguments.putString("userId", model.getCurrentUser().getUid());
         arguments.putString("beerId", getIntent().getExtras().getString(ITEM_ID));
+        arguments.putInt("amountInFridge", amountInFridge);
         actionsBottomSheetDialog.setArguments(arguments);
 
         actionsBottomSheetDialog.show(getSupportFragmentManager(), "ActionsBottomSheetDialog");
@@ -148,6 +154,10 @@ public class DetailsActivity extends AppCompatActivity implements OnRatingLikedL
 
     private void updateRatings(List<Rating> ratings) {
         adapter.submitList(new ArrayList<>(ratings));
+    }
+
+    private void updateFridgeItem(FridgeItem fridgeItem) {
+        amountInFridge = fridgeItem.getAmount();
     }
 
     @Override
