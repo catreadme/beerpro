@@ -1,11 +1,11 @@
 package ch.beerpro.presentation.explore;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ListAdapter;
@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ch.beerpro.R;
-import ch.beerpro.presentation.utils.BackgroundImageProvider;
 import ch.beerpro.presentation.utils.StringDiffItemCallback;
 
 
@@ -46,9 +45,6 @@ public class BeerManufacturersRecyclerViewAdapter
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.content)
-        TextView content;
-
         @BindView(R.id.imageView)
         ImageView imageView;
 
@@ -58,9 +54,15 @@ public class BeerManufacturersRecyclerViewAdapter
         }
 
         void bind(String item, int position, BeerManufacturersFragment.OnItemSelectedListener listener) {
-            content.setText(item);
             Context resources = itemView.getContext();
-            imageView.setImageDrawable(BackgroundImageProvider.getBackgroundImage(resources, position + 10));
+            String backgroundImageURI = "@drawable/" + item;
+            int backgroundImageIdentifier = resources.getResources().getIdentifier(backgroundImageURI, null, resources.getPackageName());
+
+            if (backgroundImageIdentifier != 0) {
+                Drawable backGroundImageResource = resources.getResources().getDrawable(backgroundImageIdentifier);
+                imageView.setImageDrawable(backGroundImageResource);
+            }
+
             if (listener != null) {
                 itemView.setOnClickListener(v -> listener.onBeerManufacturerSelected(item));
             }
