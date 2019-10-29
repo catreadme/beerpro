@@ -50,7 +50,7 @@
                         android:id="@+id/photo"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:transitionName="image"
+                        android:transitionName="manufacturer"
                         app:srcCompat="@drawable/ic_beer_glass_empty" />
 
                 </androidx.cardview.widget.CardView>

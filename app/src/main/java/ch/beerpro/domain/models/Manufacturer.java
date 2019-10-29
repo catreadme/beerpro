@@ -2,27 +2,24 @@ package ch.beerpro.domain.models;
 
 import androidx.annotation.NonNull;
 
-import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 
-import java.util.Date;
-
 @IgnoreExtraProperties
-public class Image implements Entity {
+public class Manufacturer implements Entity {
 
-    public static final String COLLECTION = "images";
+    public static final String COLLECTION = "manufacturers";
     public static final String FIELD_ID = "id";
     public static final String FIELD_RESOURCE_NAME = "resourceName";
 
     private String id;
     private String resourceName;
 
-    public Image(String id, String resourceName) {
+    public Manufacturer(String id, String resourceName) {
         this.id = id;
         this.resourceName = resourceName;
     }
 
-    public Image() {
+    public Manufacturer() {
     }
 
     public String getId() {
@@ -41,7 +38,7 @@ public class Image implements Entity {
     public boolean equals(final Object o) {
         if (o == this) return true;
         if (!(o instanceof Wish)) return false;
-        final Image other = (Image) o;
+        final Manufacturer other = (Manufacturer) o;
         if (!other.canEqual((Object) this)) return false;
         final Object this$id = this.getId();
         final Object other$id = other.getId();
@@ -52,7 +49,7 @@ public class Image implements Entity {
     }
 
     private boolean canEqual(final Object other) {
-        return other instanceof Image;
+        return other instanceof Manufacturer;
     }
 
     public int hashCode() {
@@ -67,6 +64,6 @@ public class Image implements Entity {
 
     @NonNull
     public String toString() {
-        return "Image(id=" + this.getId() + ", resourceName=" + this.getResourceName() + ")";
+        return "Manufacturer(id=" + this.getId() + ", resourceName=" + this.getResourceName() + ")";
     }
 }

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -33,7 +32,7 @@ import butterknife.OnClick;
 import ch.beerpro.GlideApp;
 import ch.beerpro.R;
 import ch.beerpro.domain.models.Beer;
-import ch.beerpro.domain.models.Image;
+import ch.beerpro.domain.models.Manufacturer;
 import ch.beerpro.domain.models.Rating;
 import ch.beerpro.domain.models.Wish;
 import ch.beerpro.presentation.details.createrating.CreateRatingActivity;
@@ -146,11 +145,11 @@ public class DetailsActivity extends AppCompatActivity implements OnRatingLikedL
         avgRating.setText(getResources().getString(R.string.fmt_avg_rating, item.getAvgRating()));
         numRatings.setText(getResources().getString(R.string.fmt_ratings, item.getNumRatings()));
         toolbar.setTitle(item.getName());
-        model.getImageById(item.getManufacturer()).observe(this, this::updateImage);
+        model.getManufacturerById(item.getManufacturer()).observe(this, this::updateManufacturer);
     }
 
-    private void updateImage(Image image) {
-        String backgroundImageURI = "@drawable/" + image.getResourceName();
+    private void updateManufacturer(Manufacturer manufacturer) {
+        String backgroundImageURI = "@drawable/" + manufacturer.getResourceName();
         int backgroundImageIdentifier = getResources().getIdentifier(backgroundImageURI, null, getPackageName());
 
         if (backgroundImageIdentifier != 0) {
