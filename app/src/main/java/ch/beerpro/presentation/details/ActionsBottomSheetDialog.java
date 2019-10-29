@@ -34,6 +34,7 @@ public class ActionsBottomSheetDialog extends BottomSheetDialogFragment {
                 AddToFridgeDialog addToFridgeDialog = new AddToFridgeDialog();
                 addToFridgeDialog.setArguments(arguments);
                 addToFridgeDialog.show(getFragmentManager(), "ActionsBottomSheetDialog");
+                dismiss();
             }
         });
 
