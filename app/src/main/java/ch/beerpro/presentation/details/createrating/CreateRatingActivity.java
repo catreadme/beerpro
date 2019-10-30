@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -19,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NavUtils;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.bumptech.glide.request.RequestOptions;
@@ -27,6 +29,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -40,11 +43,12 @@ import pl.aprilapps.easyphotopicker.EasyImage;
 import pl.tajchert.nammu.Nammu;
 import pl.tajchert.nammu.PermissionCallback;
 
-public class CreateRatingActivity extends AppCompatActivity {
+public class CreateRatingActivity extends AppCompatActivity implements BitternessDialog.BitternessDialogListener, AromasDialog.AromasDialogListener {
 
     public static final String ITEM = "item";
     public static final String RATING = "rating";
     private static final String TAG = "CreateRatingActivity";
+    private static final int LOCATION_REQUEST = 1;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
@@ -63,7 +67,19 @@ public class CreateRatingActivity extends AppCompatActivity {
     @BindView(R.id.photoExplanation)
     TextView photoExplanation;
 
+    @BindView(R.id.addLocation)
+    Button addLocation;
+
+    @BindView(R.id.addBitterness)
+    Button addBitterness;
+
+    @BindView(R.id.addAromas)
+    Button addAromas;
+
     private CreateRatingViewModel model;
+    private ArrayList<String> aromas;
+    private String bitterness;
+    private String location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +120,21 @@ public class CreateRatingActivity extends AppCompatActivity {
             EasyImage.openChooserWithDocuments(CreateRatingActivity.this, "", 0);
         });
 
+        addLocation.setOnClickListener(v -> {
+            Intent loc = new Intent(CreateRatingActivity.this, LocationDialog.class);
+            CreateRatingActivity.this.startActivityForResult(loc, LOCATION_REQUEST);
+        });
+
+        addAromas.setOnClickListener(v -> {
+            DialogFragment aromasDialog = new AromasDialog();
+            aromasDialog.show(getSupportFragmentManager(), "aromas");
+        });
+
+        addBitterness.setOnClickListener(v -> {
+            DialogFragment bitternessDialog = new BitternessDialog();
+            bitternessDialog.show(getSupportFragmentManager(), "bitterness");
+        });
+
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         if (user != null) {
@@ -116,6 +147,15 @@ public class CreateRatingActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onAromasResult(ArrayList<String> aromas) {
+        this.aromas = aromas;
+    }
+
+    @Override
+    public void onBitternessResult(String bitterness) {
+        this.bitterness = bitterness;
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -173,6 +213,10 @@ public class CreateRatingActivity extends AppCompatActivity {
         } else if (resultCode == UCrop.RESULT_ERROR) {
             handleCropError(data);
         }
+
+        if(requestCode == LOCATION_REQUEST && resultCode == RESULT_OK) {
+            this.location = data.getStringExtra("location");
+        }
     }
 
     private void handleCropResult(@NonNull Intent result) {
@@ -218,10 +262,9 @@ public class CreateRatingActivity extends AppCompatActivity {
     private void saveRating() {
         float rating = addRatingBar.getRating();
         String comment = ratingText.getText().toString();
-        // TODO show a spinner!
-        // TODO return the new rating to update the new average immediately
-        model.saveRating(model.getItem(), rating, comment, model.getPhoto())
+        model.saveRating(model.getItem(), rating, this.location, this.aromas, this.bitterness, comment, model.getPhoto())
                 .addOnSuccessListener(task -> onBackPressed())
                 .addOnFailureListener(error -> Log.e(TAG, "Could not save rating", error));
     }
 }
+

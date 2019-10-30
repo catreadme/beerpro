@@ -1,5 +1,6 @@
 package ch.beerpro.presentation.details;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,6 @@ import ch.beerpro.GlideApp;
 import ch.beerpro.R;
 import ch.beerpro.domain.models.Rating;
 import ch.beerpro.presentation.utils.EntityDiffItemCallback;
-
 
 public class RatingsRecyclerViewAdapter extends ListAdapter<Rating, RatingsRecyclerViewAdapter.ViewHolder> {
 
@@ -61,6 +61,15 @@ public class RatingsRecyclerViewAdapter extends ListAdapter<Rating, RatingsRecyc
         @BindView(R.id.ratingBar)
         RatingBar ratingBar;
 
+        @BindView(R.id.aromas)
+        TextView aromas;
+
+        @BindView(R.id.bitterness)
+        TextView bitterness;
+
+        @BindView(R.id.location)
+        TextView location;
+
         @BindView(R.id.authorName)
         TextView authorName;
 
@@ -86,6 +95,29 @@ public class RatingsRecyclerViewAdapter extends ListAdapter<Rating, RatingsRecyc
 
             ratingBar.setNumStars(5);
             ratingBar.setRating(item.getRating());
+
+            if(item.getLocation() != null) {
+                String locationText = "Ort: " + item.getLocation();
+                location.setText(locationText);
+            } else {
+                location.setVisibility(View.GONE);
+            }
+
+            if(item.getBitterness() != null) {
+                String bitternessText = "Bitterkeit: " + item.getBitterness();
+                bitterness.setText(bitternessText);
+            } else {
+                bitterness.setVisibility(View.GONE);
+            }
+
+            if(item.getAromas() != null) {
+                String text = TextUtils.join(", ", item.getAromas());
+                String aromasText = "Aromen: " + text;
+                aromas.setText(aromasText);
+            } else {
+                aromas.setVisibility(View.GONE);
+            }
+
             String formattedDate =
                     DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.SHORT).format(item.getCreationDate());
             date.setText(formattedDate);
