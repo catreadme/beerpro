@@ -27,11 +27,15 @@ android {
 }
 
 dependencies {
+    implementation 'com.google.android.gms:play-services-location:17.0.0'
+    implementation 'com.google.android.libraries.places:places:2.0.0'
+
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta2'
 
     implementation "androidx.lifecycle:lifecycle-extensions:2.1.0"
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
     annotationProcessor "androidx.lifecycle:lifecycle-common-java8:2.1.0"
     implementation "androidx.lifecycle:lifecycle-reactivestreams:2.1.0"
 
@@ -44,11 +48,10 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-firestore:5.0.0'
 
 
-
     // an alternative to picasso
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
-    implementation ("com.github.bumptech.glide:recyclerview-integration:4.9.0") {
+    implementation("com.github.bumptech.glide:recyclerview-integration:4.9.0") {
         // Excludes the support library because it's already included by Glide.
         transitive = false
     }
