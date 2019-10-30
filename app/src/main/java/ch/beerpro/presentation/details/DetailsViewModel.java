@@ -10,10 +10,12 @@ import java.util.List;
 
 import ch.beerpro.data.repositories.BeersRepository;
 import ch.beerpro.data.repositories.CurrentUser;
+import ch.beerpro.data.repositories.ManufacturersRepository;
 import ch.beerpro.data.repositories.LikesRepository;
 import ch.beerpro.data.repositories.RatingsRepository;
 import ch.beerpro.data.repositories.WishlistRepository;
 import ch.beerpro.domain.models.Beer;
+import ch.beerpro.domain.models.Manufacturer;
 import ch.beerpro.domain.models.Rating;
 import ch.beerpro.domain.models.Wish;
 
@@ -26,6 +28,7 @@ public class DetailsViewModel extends ViewModel implements CurrentUser {
 
     private final LikesRepository likesRepository;
     private final WishlistRepository wishlistRepository;
+    private final ManufacturersRepository manufacturersRepository;
 
     public DetailsViewModel() {
         // TODO We should really be injecting these!
@@ -33,11 +36,13 @@ public class DetailsViewModel extends ViewModel implements CurrentUser {
         RatingsRepository ratingsRepository = new RatingsRepository();
         likesRepository = new LikesRepository();
         wishlistRepository = new WishlistRepository();
+        manufacturersRepository = new ManufacturersRepository();
 
         MutableLiveData<String> currentUserId = new MutableLiveData<>();
         beer = beersRepository.getBeer(beerId);
         wish = wishlistRepository.getMyWishForBeer(currentUserId, getBeer());
         ratings = ratingsRepository.getRatingsForBeer(beerId);
+
         currentUserId.setValue(getCurrentUser().getUid());
     }
 
@@ -63,5 +68,9 @@ public class DetailsViewModel extends ViewModel implements CurrentUser {
 
     public Task<Void> toggleItemInWishlist(String itemId) {
         return wishlistRepository.toggleUserWishlistItem(getCurrentUser().getUid(), itemId);
+    }
+
+    public LiveData<Manufacturer> getManufacturerById(String id) {
+        return manufacturersRepository.getManufacturerById(id);
     }
 }

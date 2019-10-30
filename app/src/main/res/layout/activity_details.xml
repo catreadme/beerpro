@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content">
 
                 <ImageView
-                    android:id="@+id/imageView2"
+                    android:id="@+id/backgroundImage"
                     android:layout_width="0dp"
                     android:layout_height="200dp"
                     android:scaleType="centerCrop"
@@ -50,7 +50,7 @@
                         android:id="@+id/photo"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:transitionName="image"
+                        android:transitionName="manufacturer"
                         app:srcCompat="@drawable/ic_beer_glass_empty" />
 
                 </androidx.cardview.widget.CardView>
