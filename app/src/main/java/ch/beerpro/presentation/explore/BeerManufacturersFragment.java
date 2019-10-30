@@ -12,9 +12,13 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ch.beerpro.R;
+import ch.beerpro.domain.models.Manufacturer;
 import ch.beerpro.presentation.MainViewModel;
 import ch.beerpro.presentation.utils.GridSpacingItemDecoration;
 
@@ -59,7 +63,13 @@ public class BeerManufacturersFragment extends Fragment {
         BeerManufacturersRecyclerViewAdapter adapter = new BeerManufacturersRecyclerViewAdapter(mListener);
 
         MainViewModel model = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
-        model.getBeerManufacturers().observe(this, adapter::submitList);
+        model.getBeerManufacturers().observe(this, (List<Manufacturer> manufacturers) -> {
+           adapter.submitList(new ArrayList<String>() {{
+               for (Manufacturer manufacturer : manufacturers) {
+                   add(manufacturer.getResourceName());
+               }
+           }});
+        });
 
         recyclerView.setAdapter(adapter);
 
